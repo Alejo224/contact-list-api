@@ -1,7 +1,11 @@
 package com.backend.ContactListApi.Services;
 
+import com.backend.ContactListApi.Dtos.ContactDTO;
 import com.backend.ContactListApi.Entities.Contact;
+import com.backend.ContactListApi.Exceptions.ResourceNotFoundException;
 import com.backend.ContactListApi.Repositories.ContactRepository;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -10,21 +14,38 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
+@AllArgsConstructor
 @Service
 public class ContactService implements ContactRepository{
 
     @Autowired
     private ContactRepository contactRepository;
-
-
+    //dependencia injectable
+    private final ModelMapper mapper = new ModelMapper();
 
     @Override
     public <S extends Contact> S save(S entity) {
         return contactRepository.save(entity);
+    }
+    public Contact create(ContactDTO contactDTO){
+        //transferir valores 1.argu fuente 2.argu destino
+        Contact contact = mapper.map(contactDTO, Contact.class);
+        //Asignarle la hor de registro al contacto
+        contact.setCreatedAt(LocalDateTime.now());
+        return save(contact);
+    }
+
+    public Contact update(Long id, ContactDTO contactDTO){
+        Contact contactFormOb = findById(id).orElseThrow(ResourceNotFoundException::new);
+//        //instancia de ModelMapper
+//        ModelMapper maper = new ModelMapper();
+        //transferir valores 1.argu fuente 2.argu destino
+        mapper.map(contactDTO, contactFormOb);
+        return save(contactFormOb);
     }
 
     @Override

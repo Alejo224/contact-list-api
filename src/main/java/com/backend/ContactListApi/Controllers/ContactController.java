@@ -1,14 +1,17 @@
 package com.backend.ContactListApi.Controllers;
 
 
+import com.backend.ContactListApi.Dtos.ContactDTO;
 import com.backend.ContactListApi.Entities.Contact;
 import com.backend.ContactListApi.Services.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -24,12 +27,11 @@ public class ContactController {
 
     @CrossOrigin
     @GetMapping
-    private ResponseEntity<List<Contact>> getAllContact(@RequestParam(defaultValue = "id") String sortBy,
-                                                        @RequestParam(defaultValue = "ASC") String direction){
+    private ResponseEntity<List<Contact>> getAllContact(){
         //mostar todos los contactos registrados de forma asendente
-//        return ResponseEntity.ok(contactService.findAll(Sort.by(Sort.Direction.ASC, "id")));
-            Sort sort = Sort.by(Sort.Direction.fromString(direction.toUpperCase()), sortBy);
-        return ResponseEntity.ok(contactService.findAll(sort));
+        return ResponseEntity.ok(contactService.findAll(Sort.by(Sort.Direction.ASC, "id")));
+//            Sort sort = Sort.by(Sort.Direction.fromString(direction.toUpperCase()), sortBy);
+//        return ResponseEntity.ok(contactService.findAll(sort));
     }
 
     @CrossOrigin
@@ -43,17 +45,20 @@ public class ContactController {
 
     @CrossOrigin
     @PostMapping
-    public ResponseEntity<Contact> createContact(@RequestBody Contact contact){
-        //condición de una posible respuesta de error que le avisara al frontend
-        try {
-            //Asignarle la hor de registro al contacto
-            contact.setCreatedAt(LocalDateTime.now());
-            Contact saveContact = contactService.save(contact);
-            return ResponseEntity.created(new URI("/api/contacts/create/"+saveContact.getId())).body(saveContact);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<Contact> createContact(@Validated @RequestBody ContactDTO contactDTO){
 
+        // Crear el contacto y obtener el recurso creado
+        Contact createdContact = contactService.create(contactDTO);
+
+        // Crear el contacto y obtener el recurso creado
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest() // Obtiene la URL base de la solicitud actual
+                .path("/{id}") // Añade el ID del recurso creado a la URL
+                .buildAndExpand(createdContact.getId())
+                .toUri();
+
+        // Devolver una respuesta con el código 201 y la ubicación del recurso
+        return ResponseEntity.created(location).body(createdContact);
     }
 
     @CrossOrigin
@@ -68,19 +73,8 @@ public class ContactController {
 
     @CrossOrigin
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContact(@PathVariable Long id, @RequestBody Contact contact){
-        //Busca el contacto y lanza un excepción si no existe
-        Contact existingContact = contactService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
+    public ResponseEntity<Contact> updateContact(@PathVariable Long id,@Validated @RequestBody ContactDTO contactDTO){
 
-        //actualiza los compos necesarios
-        existingContact.setName(contact.getName());
-        existingContact.setEmail(contact.getEmail());
-
-        //gardar los datos actualizado a la bse de datos
-        Contact updateContact = contactService.save(existingContact);
-
-        // retorna la respuesta con el contacto ctualizado
-        return ResponseEntity.ok(updateContact);
+        return ResponseEntity.ok(contactService.update(id, contactDTO));
     }
 }
