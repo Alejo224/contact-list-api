@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RequestMapping("/api/contacts")
@@ -30,14 +31,11 @@ public class ContactController {
     private ResponseEntity<List<Contact>> getAllContact(){
         //mostar todos los contactos registrados de forma asendente
         return ResponseEntity.ok(contactService.findAll(Sort.by(Sort.Direction.ASC, "id")));
-//            Sort sort = Sort.by(Sort.Direction.fromString(direction.toUpperCase()), sortBy);
-//        return ResponseEntity.ok(contactService.findAll(sort));
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<Contact> getContactById(@PathVariable Long id){
-//        return movie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         return contactService.findById(id).map(ResponseEntity::ok).
                 orElseGet(() -> ResponseEntity.notFound().build());
         
@@ -64,11 +62,19 @@ public class ContactController {
     @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContact(@PathVariable Long id){
-        if (!contactService.existsById(id)){
+        Optional<Contact> contact = contactService.findById(id);
+
+        if (contact.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         contactService.deleteById(id);
         return ResponseEntity.noContent().build();
+
+//        if (!contactService.existsById(id)){
+//            return ResponseEntity.notFound().build();
+//        }
+//        contactService.deleteById(id);
+//        return ResponseEntity.noContent().build();
     }
 
     @CrossOrigin

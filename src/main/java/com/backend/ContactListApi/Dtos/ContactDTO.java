@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class ContactDTO {
     //validaciones
     @NotBlank(message = "El campo 'name' es obligatorio.")
@@ -18,4 +16,20 @@ public class ContactDTO {
     private String email;
 
 
+    //getters and setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

@@ -1,7 +1,11 @@
 package com.backend.ContactListApi.Config;
 
+import com.backend.ContactListApi.Exceptions.DuplicateEmailException;
+import com.backend.ContactListApi.Exceptions.DuplicateUsernameException;
+import com.backend.ContactListApi.Exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +23,7 @@ public class ExceptionHandling {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidation(MethodArgumentNotValidException exception) {
+
         // Crear un objeto ProblemDetail para estructurar la respuesta de error
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Error de validación");
@@ -40,4 +45,20 @@ public class ExceptionHandling {
         problemDetail.setProperty("errores", errors);
         return problemDetail;
     }
+
+    // Manejo de excepciones personalizadas
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<String> handleDuplicateUsernameException(DuplicateUsernameException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+//    }
 }
