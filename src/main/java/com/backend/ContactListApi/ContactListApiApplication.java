@@ -14,21 +14,6 @@ public class ContactListApiApplication {
 		SpringApplication.run(ContactListApiApplication.class, args);
 	}
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer(){
-        return new WebMvcConfigurer(){
-            @Override
-            public void addCorsMappings(CorsRegistry registry){
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200").allowedMethods("*").allowedHeaders("*");
-            }
-        };
-    }
 
-    @Bean
-    ModelMapper modelMapper(){
-    //instancia de ModelMapper
-        return new ModelMapper();
-
-    }
 
 }
