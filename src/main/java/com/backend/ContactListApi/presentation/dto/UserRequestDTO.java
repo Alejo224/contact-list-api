@@ -4,7 +4,9 @@ import com.backend.ContactListApi.persistence.entity.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
+/**
+ * DTO para representar una solicitud de creación o actualización de un usuario.
+ */
 public class UserRequestDTO {
     @NotBlank(message = "El campo 'username' es obligatorio")
     private String username;

@@ -2,7 +2,10 @@ package com.backend.ContactListApi.presentation.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
+/**
+ * DTO para la gestión de contactos.
+ * Contiene información básica de un contacto como nombre y correo electrónico.
+ */
 public class ContactDTO {
     //validaciones
     @NotBlank(message = "El campo 'name' es obligatorio.")

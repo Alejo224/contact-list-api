@@ -14,7 +14,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Controlador REST para la gestión de contactos.
+ * Proporciona endpoints para operaciones CRUD sobre la entidad {@link Contact}.
+ */
 @CrossOrigin
 @RequestMapping("/api/contacts")
 @RestController
@@ -27,7 +30,7 @@ public class ContactController {
     @GetMapping
     private ResponseEntity<List<Contact>> getAllContact(){
         //mostar todos los contactos registrados de forma asendente
-        return ResponseEntity.ok(contactService.findAll(Sort.by(Sort.Direction.ASC, "id")));
+        return ResponseEntity.ok(contactService.findAll());
     }
 
     @CrossOrigin
@@ -59,19 +62,10 @@ public class ContactController {
     @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContact(@PathVariable Long id){
-        Optional<Contact> contact = contactService.findById(id);
 
-        if (contact.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
         contactService.deleteById(id);
         return ResponseEntity.noContent().build();
 
-//        if (!contactService.existsById(id)){
-//            return ResponseEntity.notFound().build();
-//        }
-//        contactService.deleteById(id);
-//        return ResponseEntity.noContent().build();
     }
 
     @CrossOrigin

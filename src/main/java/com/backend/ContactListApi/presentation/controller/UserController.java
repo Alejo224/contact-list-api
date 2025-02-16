@@ -12,7 +12,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * Controlador REST para la gestión de usuarios.
+ * Proporciona endpoints para operaciones CRUD sobre la entidad {@link User}.
+ */
 @CrossOrigin
 @RequestMapping("api/users")
 @RestController

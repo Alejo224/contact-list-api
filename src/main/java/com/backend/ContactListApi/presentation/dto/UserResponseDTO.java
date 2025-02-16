@@ -1,7 +1,9 @@
 package com.backend.ContactListApi.presentation.dto;
 
 import com.backend.ContactListApi.persistence.entity.enums.Role;
-
+/**
+ * DTO que representa la respuesta con información del usuario.
+ */
 public class UserResponseDTO {
     private Long id;
     private String username;

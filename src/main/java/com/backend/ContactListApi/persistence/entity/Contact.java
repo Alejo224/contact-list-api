@@ -3,10 +3,12 @@ package com.backend.ContactListApi.persistence.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-//@Getter
-//@Setter
-//@RequiredArgsConstructor
-//@NoArgsConstructor
+/**
+ * Entidad que representa un contacto en la base de datos.
+ * <p>
+ * La tabla asociada en la base de datos se llama "Contact" y almacena la información
+ * de cada contacto registrado en la aplicación.
+ */
 @Entity
 @Table(name = "Contact")
 public class Contact {

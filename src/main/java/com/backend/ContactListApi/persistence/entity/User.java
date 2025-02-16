@@ -3,6 +3,12 @@ package com.backend.ContactListApi.persistence.entity;
 import com.backend.ContactListApi.persistence.entity.enums.Role;
 import jakarta.persistence.*;
 
+/**
+ * Entidad que representa un usuario en la base de datos.
+ * <p>
+ * La tabla asociada en la base de datos se llama "users" y almacena
+ * la información de cada usuario registrado en la aplicación.
+ */
 @Entity
 @Table(name = "users")
 public class User {

@@ -17,8 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manejador global de excepciones para la API REST.
+ * <p>
+ * Captura excepciones comunes y personalizadas, proporcionando respuestas estructuradas y significativas.
+ */
 @RestControllerAdvice
 public class ExceptionHandling {
+    /**
+     * Maneja excepciones de validación cuando un argumento de un método no es válido.
+     * <p>
+     * Genera una respuesta en formato `ProblemDetail`, proporcionando detalles de los errores encontrados.
+     *
+     * @param exception Excepción capturada de tipo `MethodArgumentNotValidException`.
+     * @return Un objeto `ProblemDetail` con los errores de validación.
+     */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -45,18 +58,29 @@ public class ExceptionHandling {
         problemDetail.setProperty("errores", errors);
         return problemDetail;
     }
+    /**
+     * Maneja la excepción `DuplicateUsernameException` y `DuplicateEmailException`, cuando un nombre de usuario ya está registrado.
+     *
+     * @param ex Excepción capturada.
+     * @return Un `ResponseEntity` con código 400 (BAD REQUEST) y el mensaje de error.
+     */
 
     // Manejo de excepciones personalizadas
     @ExceptionHandler(DuplicateUsernameException.class)
     public ResponseEntity<String> handleDuplicateUsernameException(DuplicateUsernameException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
-
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    /**
+     * Maneja la excepción `InvalidPasswordException`, cuando la contraseña no cumple con los requisitos de seguridad.
+     *
+     * @param ex Excepción capturada.
+     * @return Un `ResponseEntity` con código 400 (BAD REQUEST) y el mensaje de error.
+     */
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<String> handleInvalidPasswordException(InvalidPasswordException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

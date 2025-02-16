@@ -18,6 +18,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * La clase `ContactService` proporciona los servicios para la gestión de contactos en la aplicación.
+ * Actúa como la capa intermedia entre el controlador y el repositorio, facilitando la lógica de negocio
+ * y la manipulación de datos.
+ * Esta clase implementa las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+ * para la entidad `Contact` utilizando `ContactRepository`. Además, emplea `ModelMapper`
+ * para transformar los objetos de transferencia de datos (DTOs) en entidades y viceversa.
+ */
 @Service
 public  class UserService {
     //inyectar el repositorio
