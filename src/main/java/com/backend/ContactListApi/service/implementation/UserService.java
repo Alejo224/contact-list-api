@@ -48,7 +48,7 @@ public  class UserService {
         User user = mapper.map(userRequestDTO, User.class);
 
         //Codificar contraseña
-        userRequestDTO.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
         // Guardar usuario en la base de datos
         return  userRepository.save(user);
@@ -86,11 +86,15 @@ public  class UserService {
         /* validarPassword si cumple con los requerimientos*/
         validarPassword(userRequestDTO.getPassword());
 
-        // Transferir valores de la entidad al DTO
-        mapper.map(userRequestDTO, userFormOb);
+        //configurar mapper para ignorar la contraseña
+        mapper.typeMap(UserRequestDTO.class, User.class).addMappings(model -> model.skip(User::setPassword));
 
-        //Codificar contraseña actualizada
-        userRequestDTO.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        //verificar si la contraseña es diferente
+        if (!passwordEncoder.matches(userRequestDTO.getPassword(), userFormOb.getPassword())){
+            //Codificar la nueva contraseña
+            userFormOb.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+            System.out.println("Se ha guardado la nueva contraseña correctamente");
+        }
 
         return  userRepository.save(userFormOb);
     }
